@@ -5,9 +5,14 @@
   "license": "MIT",
   "dependencies": {
     "crypto-js": "^4.0.0",
+    "dotenv": "^9.0.1",
+    "env-var": "^7.0.0",
     "jayson": "^3.3.3"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.0.1",
+    "@types/dotenv": "^8.2.0",
+    "@types/jest": "^26.0.23",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
     "@typescript-eslint/parser": "^4.22.1",
     "eslint": "^7.26.0",
@@ -17,10 +22,18 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-promise": "^4.3.1",
-    "prettier": "^2.2.1"
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "ts-jest": "^26.5.6",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
   },
   "scripts": {
     "lint": "",
-    "lint:fix": ""
+    "lint:fix": "",
+    "test": "jest --verbose --coverage",
+    "test:update": "jest --verbose --coverage --updateSnapshot",
+    "test:watch": "jest --verbose --watch",
+    "test:coverage": "jest --verbose --coverage && open ./coverage/lcov-report/index.html"
   }
 }
