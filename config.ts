@@ -8,13 +8,17 @@ export interface Config {
 class SingletonConfig implements Config {
   PORT: number;
 
-  constructor() {
-    this.loadConfig();
+  constructor(options?: dotenv.DotenvConfigOptions) {
+    this.loadConfig(options);
     this.validateConfig();
   }
 
-  private loadConfig(): void {
-    dotenv.config();
+  private loadConfig(options?: dotenv.DotenvConfigOptions): void {
+    const configOutput = dotenv.config(options);
+
+    if (configOutput.error) {
+      throw configOutput.error;
+    }
   }
 
   private validateConfig(): void {
@@ -22,5 +26,20 @@ class SingletonConfig implements Config {
   }
 }
 
-const config = new SingletonConfig();
-export default config as Config;
+let config: SingletonConfig;
+
+export function loadConfig(
+  options?: string | dotenv.DotenvConfigOptions
+): Config {
+  if (config) {
+    throw 'config may only be loaded once';
+  }
+
+  if (typeof options === 'string') {
+    options = { path: options };
+  }
+
+  config = new SingletonConfig(options);
+
+  return config;
+}

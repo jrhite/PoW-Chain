@@ -1,4 +1,5 @@
 import { Client } from 'jayson';
+
 import config from '../config';
 
 const client = Client.http({
