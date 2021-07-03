@@ -1,7 +1,8 @@
 
 1. add `.env` to the `.gitignore` file
 2. copy the desired environment template file (eg: `$PROJECT_ROOT/example-envs/env-dev`) to the project's root dir and rename the file `.env`
-# eg:
+
+    eg:
 ```
 cp $PROJECT_ROOT/example-envs/env-dev $PROJECT_ROOT/.env
 ```
