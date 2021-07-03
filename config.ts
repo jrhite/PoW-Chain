@@ -5,6 +5,8 @@ export interface Config {
   readonly PORT: number;
 }
 
+let _config: Config;
+
 class SingletonConfig implements Config {
   PORT: number;
 
@@ -26,12 +28,10 @@ class SingletonConfig implements Config {
   }
 }
 
-let config: SingletonConfig;
-
 export function loadConfig(
   options?: string | dotenv.DotenvConfigOptions
 ): Config {
-  if (config) {
+  if (_config) {
     throw 'config may only be loaded once';
   }
 
@@ -39,7 +39,15 @@ export function loadConfig(
     options = { path: options };
   }
 
-  config = new SingletonConfig(options);
+  _config = new SingletonConfig(options);
 
-  return config;
+  return _config;
+}
+
+export function config(): Config {
+  if (!_config) {
+    throw 'config has not yet been loaded';
+  }
+
+  return _config;
 }

@@ -1,12 +1,12 @@
+import { DotenvConfigOptions } from 'dotenv';
+
 import { Config } from '../config';
 
 describe('singleton config', () => {
   describe('loading', () => {
     let config: Config;
 
-    afterEach(() => {
-      jest.resetModules();
-    });
+    beforeEach(jest.resetModules);
 
     afterEach(async () => {
       if (!config) {
@@ -38,30 +38,51 @@ describe('singleton config', () => {
       expect(process.env.PORT).toEqual('' + PORT);
     });
 
-    test.todo('fails gracefully when .env file cannot be loaded');
-    //, () => {
-    // loadConfigFromEnv('./.nonexistent-env');
-    //});
+    test('fails gracefully when .env file cannot be loaded', async () => {
+      const module = await import('../config');
+
+      expect(() => {
+        module.loadConfig('./__tests__/.nonexistent-env');
+      }).toThrow();
+    });
 
     test('system can only load .env file one time', async () => {
       const module = await import('../config');
       module.loadConfig();
 
-      await expect(module.loadConfig()).rejects.toThrow();
+      expect(() => {
+        module.loadConfig();
+      }).toThrow();
+    });
+
+    test('config() cannot be called before loadConfig()', async () => {
+      const module = await import('../config');
+
+      expect(() => {
+        module.config();
+      }).toThrow();
     });
   });
 
-  describe('validation', () => {
-    test.todo('contains all expected enviroment vars with expected types');
-    //   () => {
-    //     // expect(config.port).toEqual(3032);
-    //   }
-    // );
-  });
+  describe('accessing', () => {
+    let module: {
+      loadConfig: (options?: string | DotenvConfigOptions) => Config;
+      config: () => Config;
+    };
 
-  describe('creation', () => {
-    test.todo('only one instance can be created');
+    let config: Config;
 
-    test.todo('contains only readonly enviroment variables');
+    beforeAll(jest.resetModules);
+
+    beforeAll(async () => {
+      module = await import('../config');
+      config = module.loadConfig('./__tests__/.test-env');
+    });
+
+    test('loadConfig() and config() return the same config object', () => {
+      const testConfig = module.config();
+
+      expect(testConfig).toBe(config);
+    });
   });
 });
